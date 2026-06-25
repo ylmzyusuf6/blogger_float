@@ -1,184 +1,129 @@
-console.log("APP JS LOADED");
+console.log("CSFLOAT CLONE LOADED");
 
 let activeAccount = "ANA HESAP";
 
-// local database
 let db = JSON.parse(localStorage.getItem("csfloat_db")) || {};
 
-// DEMO INITIAL DATA (ilk açılış için)
+// INIT DEFAULT ACCOUNT
 if (!db["ANA HESAP"]) {
-    db["ANA HESAP"] = {
-        history: [
-            {
-                image: "https://community.fastly.steamstatic.com/economy/image/class/730/188530139/96fx96f",
-                item: "AK-47 Redline FT",
-                action: "BUY",
-                date: "25.06.2026",
-                buy: "12.50",
-                sell: ""
-            }
-        ],
-        inventory: [
-            {
-                image: "https://community.fastly.steamstatic.com/economy/image/class/730/188530139/96fx96f",
-                item: "AK-47 Redline FT"
-            }
-        ]
-    };
+    db["ANA HESAP"] = { history: [], inventory: [] };
 }
 
-// --------------------
-// ACCOUNT DATA
-// --------------------
-function getAccountData() {
-    if (!db[activeAccount]) {
-        db[activeAccount] = {
-            history: [],
-            inventory: []
-        };
+// -------------------
+function save(){
+    localStorage.setItem("csfloat_db", JSON.stringify(db));
+}
+
+function getData(){
+    if(!db[activeAccount]){
+        db[activeAccount] = { history: [], inventory: [] };
     }
     return db[activeAccount];
 }
 
-// --------------------
-// SAVE
-// --------------------
-function save() {
-    localStorage.setItem("csfloat_db", JSON.stringify(db));
-}
+// -------------------
+function render(){
 
-// --------------------
-// RENDER
-// --------------------
-function render() {
-
-    const data = getAccountData();
+    const data = getData();
 
     const historyTable = document.getElementById("historyTable");
     const inventoryList = document.getElementById("inventoryList");
 
-    if (!historyTable || !inventoryList) {
-        console.log("DOM bulunamadı");
-        return;
-    }
-
-    // HISTORY
     historyTable.innerHTML = "";
+    inventoryList.innerHTML = "";
 
-    data.history.forEach(row => {
+    data.history.forEach(h => {
         historyTable.innerHTML += `
         <tr>
-            <td><img class="item-image" src="${row.image}"></td>
-            <td>${row.item}</td>
-            <td>${row.action}</td>
-            <td>${row.date}</td>
-            <td>$${row.buy || "-"}</td>
-            <td>${row.sell ? "$" + row.sell : "-"}</td>
+            <td>${h.item}</td>
+            <td>${h.type}</td>
+            <td>${h.date}</td>
+            <td>${h.buy || "-"}</td>
+            <td>${h.sell || "-"}</td>
         </tr>
         `;
     });
 
-    // INVENTORY
-    inventoryList.innerHTML = "";
-
-    data.inventory.forEach(item => {
-        inventoryList.innerHTML += `
-        <div class="inventory-item">
-            <img class="item-image" src="${item.image}">
-            <div>${item.item}</div>
-        </div>
-        `;
+    data.inventory.forEach(i => {
+        inventoryList.innerHTML += `<div>${i.item}</div>`;
     });
 }
 
-// --------------------
-// BUY
-// --------------------
-function openBuy() {
+// -------------------
+let mode = null;
 
-    const item = prompt("Item adı?");
-    const price = prompt("Alış fiyatı?");
-    const image = prompt("Görsel URL?");
-
-    const data = getAccountData();
-
-    data.history.push({
-        image,
-        item,
-        action: "BUY",
-        date: new Date().toLocaleDateString(),
-        buy: price,
-        sell: ""
-    });
-
-    data.inventory.push({
-        image,
-        item
-    });
-
-    save();
-    render();
+function openModal(type){
+    mode = type;
+    document.getElementById("modal").classList.remove("hidden");
+    document.getElementById("modalTitle").innerText = type;
 }
 
-// --------------------
-// SELL
-// --------------------
-function openSell() {
+function closeModal(){
+    document.getElementById("modal").classList.add("hidden");
+}
 
-    const data = getAccountData();
+// -------------------
+document.getElementById("buyBtn").onclick = () => openModal("BUY");
+document.getElementById("sellBtn").onclick = () => openModal("SELL");
 
-    const itemName = prompt("Satılacak item adı?");
+// CONFIRM
+document.getElementById("confirmBtn").onclick = () => {
 
-    const index = data.inventory.findIndex(i => i.item === itemName);
+    const item = document.getElementById("itemName").value;
+    const price = document.getElementById("itemPrice").value;
+    const image = document.getElementById("itemImage").value;
 
-    if (index === -1) {
-        alert("Item bulunamadı");
-        return;
+    const data = getData();
+
+    if(mode === "BUY"){
+
+        data.history.push({
+            item,
+            type:"BUY",
+            date:new Date().toLocaleDateString(),
+            buy:price,
+            sell:""
+        });
+
+        data.inventory.push({ item, image });
+
     }
 
-    const sellPrice = prompt("Satış fiyatı?");
+    if(mode === "SELL"){
 
-    const item = data.inventory[index];
+        const index = data.inventory.findIndex(x => x.item === item);
 
-    data.history.push({
-        image: item.image,
-        item: itemName,
-        action: "SELL",
-        date: new Date().toLocaleDateString(),
-        buy: "",
-        sell: sellPrice
-    });
+        if(index === -1) return alert("Item yok");
 
-    data.inventory.splice(index, 1);
+        data.history.push({
+            item,
+            type:"SELL",
+            date:new Date().toLocaleDateString(),
+            buy:"",
+            sell:price
+        });
+
+        data.inventory.splice(index,1);
+    }
 
     save();
     render();
-}
+    closeModal();
+};
 
-// --------------------
-// BUTTON EVENTS
-// --------------------
-document.getElementById("buyBtn")?.addEventListener("click", openBuy);
-document.getElementById("sellBtn")?.addEventListener("click", openSell);
-
-// --------------------
-// ACCOUNT SYSTEM (sidebar)
-// --------------------
+// -------------------
+// ACCOUNT SWITCH
 document.querySelectorAll(".account").forEach(acc => {
-    acc.addEventListener("click", () => {
+    acc.onclick = () => {
 
-        document.querySelectorAll(".account")
-            .forEach(a => a.classList.remove("active"));
-
+        document.querySelectorAll(".account").forEach(a => a.classList.remove("active"));
         acc.classList.add("active");
 
         activeAccount = acc.innerText;
 
         render();
-    });
+    };
 });
 
-// --------------------
 // INIT
-// --------------------
 render();
