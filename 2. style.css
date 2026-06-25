@@ -1,0 +1,100 @@
+body{
+    margin:0;
+    background:#1b2838;
+    color:#c7d5e0;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.sidebar{
+    width:220px;
+    height:100vh;
+    background:#171a21;
+    position:fixed;
+    left:0;
+    top:0;
+    overflow:auto;
+}
+
+.logo{
+    padding:20px;
+    font-size:18px;
+    font-weight:bold;
+    border-bottom:1px solid #2a475e;
+}
+
+.account{
+    padding:12px 20px;
+    cursor:pointer;
+}
+
+.account:hover{
+    background:#2a475e;
+}
+
+.active{
+    background:#2a475e;
+}
+
+.main{
+    margin-left:220px;
+}
+
+.toolbar{
+    padding:15px;
+    background:#171a21;
+}
+
+button{
+    background:#66c0f4;
+    border:none;
+    padding:10px 18px;
+    margin-right:10px;
+    cursor:pointer;
+}
+
+.content{
+    display:flex;
+}
+
+.history-panel{
+    flex:3;
+    margin:15px;
+    background:#16202d;
+}
+
+.inventory-panel{
+    width:320px;
+    margin:15px 15px 15px 0;
+    background:#16202d;
+}
+
+.panel-title{
+    background:#223548;
+    padding:12px;
+    font-weight:bold;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    text-align:left;
+    padding:12px;
+    background:#223548;
+}
+
+td{
+    padding:10px;
+    border-top:1px solid #2a475e;
+}
+
+.item-image{
+    width:70px;
+}
+
+.inventory-item{
+    padding:10px;
+    border-bottom:1px solid #2a475e;
+}
