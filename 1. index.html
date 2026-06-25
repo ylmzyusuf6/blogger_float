@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>CSFloat Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo">CSFLOAT TRACKER</div>
+
+    <div class="account active">ANA HESAP</div>
+
+    <div class="account">HESAP 1</div>
+    <div class="account">HESAP 2</div>
+    <div class="account">HESAP 3</div>
+    <div class="account">HESAP 4</div>
+    <div class="account">HESAP 5</div>
+    <div class="account">HESAP 6</div>
+    <div class="account">HESAP 7</div>
+    <div class="account">HESAP 8</div>
+    <div class="account">HESAP 9</div>
+    <div class="account">HESAP 10</div>
+</div>
+
+<div class="main">
+
+    <div class="toolbar">
+        <button id="buyBtn">+ BUY</button>
+        <button id="sellBtn">+ SELL</button>
+    </div>
+
+    <div class="content">
+
+        <div class="history-panel">
+
+            <div class="panel-title">
+                MARKET HISTORY
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Görsel</th>
+                        <th>Item</th>
+                        <th>İşlem</th>
+                        <th>Tarih</th>
+                        <th>Alış</th>
+                        <th>Satış</th>
+                    </tr>
+                </thead>
+
+                <tbody id="historyTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="inventory-panel">
+
+            <div class="panel-title">
+                ACTIVE INVENTORY
+            </div>
+
+            <div id="inventoryList">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
